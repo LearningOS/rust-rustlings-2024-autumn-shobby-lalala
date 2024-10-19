@@ -1,24 +1,16 @@
-//! This is the build script for both tests7 and tests8.
-//!
-//! You should modify this file to make both exercises pass.
+use std::time::{SystemTime, UNIX_EPOCH};
+use std::env;
 
 fn main() {
-    // In tests7, we should set up an environment variable
-    // called `TEST_FOO`. Print in the standard output to let
-    // Cargo do it.
-    let timestamp = std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .unwrap()
-        .as_secs(); // What's the use of this timestamp here?
-    let your_command = format!(
-        "Your command here with {}, please checkout exercises/tests/build.rs",
-        timestamp
-    );
-    println!("cargo:{}", your_command);
+    let start = SystemTime::now();
+    let since_the_epoch = start.duration_since(UNIX_EPOCH)
+        .expect("Time went backwards");
+    let timestamp = since_the_epoch.as_secs();
+    
+    println!("cargo:rustc-env=TEST_FOO={}", timestamp);
 
-    // In tests8, we should enable "pass" feature to make the
-    // testcase return early. Fill in the command to tell
-    // Cargo about that.
-    let your_command = "Your command here, please checkout exercises/tests/build.rs";
-    println!("cargo:{}", your_command);
+    // 针对tests8.rs的条件设置
+    if env::var("CARGO_FEATURE_PASS").is_ok() {
+        println!("cargo:rustc-cfg=feature=\"pass\"");
+    }
 }

@@ -1,11 +1,11 @@
 // tests7.rs
 //
 // When building packages, some dependencies can neither be imported in
-// `Cargo.toml` nor be directly linked; some preprocesses varies from code
+// Cargo.toml nor be directly linked; some preprocesses varies from code
 // generation to set-up package-specific configurations.
 //
 // Cargo does not aim to replace other build tools, but it does integrate
-// with them with custom build scripts called `build.rs`. This file is
+// with them with custom build scripts called build.rs. This file is
 // usually placed in the root of the project, while in this case the same
 // directory of this exercise.
 //
@@ -16,7 +16,7 @@
 // - Generating a Rust module from a specification.
 // - Performing any platform-specific configuration needed for the crate.
 //
-// When setting up configurations, we can `println!` in the build script
+// When setting up configurations, we can println! in the build script
 // to tell Cargo to follow some instructions. The generic format is:
 //
 //     println!("cargo:{}", your_command_in_string);
@@ -28,25 +28,28 @@
 // In this exercise, we look for an environment variable and expect it to
 // fall in a range. You can look into the testcase to find out the details.
 //
-// You should NOT modify this file. Modify `build.rs` in the same directory
+// You should NOT modify this file. Modify build.rs in the same directory
 // to pass this exercise.
 //
-// Execute `rustlings hint tests7` or use the `hint` watch subcommand for a
+// Execute rustlings hint tests7 or use the hint watch subcommand for a
 // hint.
 
-use std::env;
-use std::time::{SystemTime, UNIX_EPOCH};
 
-fn main() {
-    // 获取当前的 Unix 时间戳
-    let start_time = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .expect("Time went backwards")
-        .as_secs();
 
-    // 设置环境变量 TEST_FOO
-    println!("cargo:TEST_FOO={}", start_time);
+fn main() {}
 
-    // 指示 Cargo 如果 build.rs 文件改变则重新运行
-    println!("cargo:rerun-if-changed=build.rs");
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_success() {
+        let timestamp = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs();
+        let s = std::env::var("TEST_FOO").unwrap();
+        let e: u64 = s.parse().unwrap();
+        assert!(timestamp >= e && timestamp < e + 10);
+    }
 }
