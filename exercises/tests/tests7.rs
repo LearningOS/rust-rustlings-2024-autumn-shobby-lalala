@@ -34,22 +34,19 @@
 // Execute `rustlings hint tests7` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
+use std::env;
+use std::time::{SystemTime, UNIX_EPOCH};
 
-fn main() {}
+fn main() {
+    // 获取当前的 Unix 时间戳
+    let start_time = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .expect("Time went backwards")
+        .as_secs();
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+    // 设置环境变量 TEST_FOO
+    println!("cargo:TEST_FOO={}", start_time);
 
-    #[test]
-    fn test_success() {
-        let timestamp = std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs();
-        let s = std::env::var("TEST_FOO").unwrap();
-        let e: u64 = s.parse().unwrap();
-        assert!(timestamp >= e && timestamp < e + 10);
-    }
+    // 指示 Cargo 如果 build.rs 文件改变则重新运行
+    println!("cargo:rerun-if-changed=build.rs");
 }

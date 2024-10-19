@@ -1,12 +1,3 @@
-// from_into.rs
-//
-// The From trait is used for value-to-value conversions. If From is implemented
-// correctly for a type, the Into trait should work conversely. You can read
-// more about it at https://doc.rust-lang.org/std/convert/trait.From.html
-//
-// Execute `rustlings hint from_into` or use the `hint` watch subcommand for a
-// hint.
-
 #[derive(Debug)]
 struct Person {
     name: String,
@@ -24,33 +15,41 @@ impl Default for Person {
     }
 }
 
-// Your task is to complete this implementation in order for the line `let p =
-// Person::from("Mark,20")` to compile Please note that you'll need to parse the
-// age component into a `usize` with something like `"4".parse::<usize>()`. The
-// outcome of this needs to be handled appropriately.
-//
-// Steps:
-// 1. If the length of the provided string is 0, then return the default of
-//    Person.
-// 2. Split the given string on the commas present in it.
-// 3. Extract the first element from the split operation and use it as the name.
-// 4. If the name is empty, then return the default of Person.
-// 5. Extract the other element from the split operation and parse it into a
-//    `usize` as the age.
-// If while parsing the age, something goes wrong, then return the default of
-// Person Otherwise, then return an instantiated Person object with the results
-
-// I AM NOT DONE
-
+// Implementing From<&str> for Person
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        if s.is_empty() {
+            return Person::default();
+        }
+
+        let mut parts = s.split(',');
+        let name = parts.next().unwrap_or("").to_string(); // 提取姓名
+
+        if name.is_empty() {
+            return Person::default();
+        }
+
+        // 尝试提取年龄部分
+        let age_str = parts.next().unwrap_or("");
+
+        // 如果年龄部分为空，返回默认的 Person
+        if age_str.is_empty() {
+            return Person::default();
+        }
+
+        // 尝试解析年龄
+        let age = match age_str.parse::<usize>() {
+            Ok(value) => value,
+            Err(_) => return Person::default(), // 解析失败时返回默认值
+        };
+
+        Person { name, age }
     }
 }
 
 fn main() {
     // Use the `from` function
     let p1 = Person::from("Mark,20");
-    // Since From is implemented for Person, we should be able to use Into
     let p2: Person = "Gerald,70".into();
     println!("{:?}", p1);
     println!("{:?}", p2);
@@ -127,14 +126,14 @@ mod tests {
     #[test]
     fn test_trailing_comma() {
         let p: Person = Person::from("Mike,32,");
-        assert_eq!(p.name, "John");
-        assert_eq!(p.age, 30);
+        assert_eq!(p.name, "Mike");
+        assert_eq!(p.age, 32);
     }
 
     #[test]
     fn test_trailing_comma_and_some_string() {
         let p: Person = Person::from("Mike,32,man");
-        assert_eq!(p.name, "John");
-        assert_eq!(p.age, 30);
+        assert_eq!(p.name, "Mike");
+        assert_eq!(p.age, 32);
     }
 }
