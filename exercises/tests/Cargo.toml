@@ -1,7 +1,13 @@
 [package]
-name = "tests7"
+name = "tests8"
 version = "0.0.1"
 edition = "2021"
+
+[dependencies]
+
+[features]
+pass = []
+
 [[bin]]
-name = "tests7"
-path = "tests7.rs"
+name = "tests8"
+path = "tests8.rs"
