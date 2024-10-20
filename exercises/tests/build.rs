@@ -10,7 +10,7 @@ fn main() {
     println!("cargo:rustc-env=TEST_FOO={}", timestamp);
 
     // 针对tests8.rs的条件设置
-    if env::var("CARGO_FEATURE_PASS").is_ok() {
-        println!("cargo:rustc-cfg=feature=\"pass\"");
-    }
+    
+    println!("cargo:rustc-cfg=feature=\"pass\"");
+    
 }

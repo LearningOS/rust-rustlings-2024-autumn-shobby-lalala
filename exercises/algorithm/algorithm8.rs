@@ -76,14 +76,14 @@ impl<T> MyStack<T> {
             self.q2.enqueue(self.q1.dequeue().unwrap());
         }
 
-        let popped = self.q1.dequeue();
+        let res = self.q1.dequeue().unwrap();
 
         std::mem::swap(&mut self.q1, &mut self.q2);
-        popped
+        Ok(res)
     }
 
     pub fn is_empty(&self) -> bool {
-        self.q1.is_empty()
+        self.q1.is_empty() && self.q2.is_empty()
     }
 }
 
