@@ -29,7 +29,7 @@ impl<T> Queue<T> {
     pub fn peek(&self) -> Result<&T, &str> {
         match self.elements.first() {
             Some(value) => Ok(value),
-            None => Err("Queue is empty"),
+            none => Err("Queue is empty"),
         }
     }
 
